@@ -35,7 +35,7 @@ arr.map((num) => num + 1); // [2, 3, 4]
 
 **parseInt**
 
-`parseInt()` 函数解析一个字符串参数，并返回一个指定基数的整数 (数学系统的基础)。
+`parseInt()` 是JavaScript的内置函数，解析一个字符串参数，并返回一个指定基数的整数 (数学系统的基础)。
 
 ```javascript
 const intValue = parseInt(string[, radix]);
@@ -43,61 +43,71 @@ const intValue = parseInt(string[, radix]);
 
 `string` 要被解析的值。如果参数不是一个字符串，则将其转换为字符串(使用 ToString 抽象操作)。字符串开头的空白符将会被忽略。
 
-`radix` 一个介于包含2和36之间的整数(数学系统的基础)，表示上述字符串的基数。默认为10。
+`radix` 一个介于包含2和36之间的整数(数学系统的基础)，表示上述字符串的基数。基数未填或者传0那么将默认为10。
 `返回值` 返回一个整数或NaN
 
 **运行流程**
 
 ```javascript
-['1', '2', '3'].map((item, index) => {
-	return parseInt(item, index)
-})
+['1', '2', '3'].map((item, index) => parseInt(item, index))
 
 // 每次执行
-parseInt('1', 0) // 1
+parseInt('1', 0) // 1 
 parseInt('2', 1) // NaN 
-parseInt('3', 2) // NaN 标识3以2进制 3不是二进制故而解析出错
+parseInt('3', 2) // NaN 字符串第一个值大于等于基数的时候返回NaN
 ```
 
 **如何达到预期效果**
 
 ```javascript
-['1', '2', '3'].map(Number) // [1,2,3]
+['1', '2', '3'].map((item) => parseInt(item))
+OR
+['1', '2', '3'].map(Number)
 ```
+
+**parseInt转换规则(伴随radix)总结**
+- 检查radix是否在区间[2,36]之间，除0外，不再此区间直接返回NaN
+- 检查转换参数是否大于等于radix，是的话直接返回NaN
+
 
 </p>
 </details>
 
 ###### 2. 以下输出结果是什么？
-   ```javascript
-   var i,j,k;
-   for( i = 0 , j = 0; i < 10 , j < 6; i++ , j++ ) {
-     k = i+j;
-   }
-   document.write(k);
-   ```
+```javascript
+ let i,j,k;
+ for( i = 0 , j = 0; i < 10 , j < 6; i++ , j++ ) {
+   k = i+j;
+ }
+ console.log('k:', k)
+```
 <details><summary><b>答案</b></summary>
 <p>
 
-#### 答案: 10
-解析：for 循环以及逗号操作符等。
+#### 答案: k: 10
+解析：考察for 循环以及逗号操作。
 
 **逗号操作符**
 逗号操作符 对它的每个操作对象求值（从左至右），然后返回最后一个操作对象的值。
 ```javascript
-  console.log((1,2)) // 2
-  console.log((x=2, ++x)) // 3
+console.log((1,2)) // 2
+console.log((x=2, ++x)) // 3
 ```
 ```javascript
-  var a = {
-    foo: function() {
-      console.log(this === window);
-    }
-  };
+const a = {
+  foo: function() {
+    console.log(this === window);
+  }
+};
 
-  a.foo(); // Returns 'false' in console
-  // 此时返回就是foo方法的调用 this指向window
-  (0, a.foo)(); // Returns 'true' in console
+a.foo(); // 'false' in console
+
+// 使用逗号操作符
+(0, a.foo)(); // 'true' in console
+
+// 使用逗号操作符之后等价于
+const b = a.foo
+b()  // 'true' in console
 ```
 **回到题目**
 for循环中，循环条件判断时，由于逗号操作符的缘故，继续循环的条件为最后一个，流程如下：
@@ -108,7 +118,16 @@ i=3, j=3  => 6
 i=4, j=4  => 8
 i=5, j=5  => 10
 
-**补充**
+**题目修改**
+```javascript
+ let i,j,k;
+ for( i = 0 , j = 0; i < 6 , j < 10; i++ , j++ ) {
+   k = i+j;
+ }
+ console.log('k:', k) // k: 18
+```
+
+**总结**
 如果j的最终值大于i，同样会以j的作循环条件遍历次数。
 
 </p>
@@ -116,36 +135,40 @@ i=5, j=5  => 10
 
 ---
 ###### 3. 以下输出结果？
-   ```javascript
-   var obj = {
-    '2': 3,
-    '3': 4,
-    'length': 2,
-    'splice': Array.prototype.splice,
-    'push': Array.prototype.push
-   }
-   obj.push(1)
-   obj.push(2)
-   console.log(obj)
-   ```
+```javascript
+const obj = {
+'2': 3,
+'3': 4,
+'length': 2,
+'splice': Array.prototype.splice,
+'push': Array.prototype.push
+}
+obj.push(1)
+obj.push(2)
+console.log(obj)
+```
 <details><summary><b>答案</b></summary>
 <p>
 
+#### 答案：Object(4) [empty × 2, 1, 2, splice: ƒ, push: ƒ]
+
 ```javascript
-// 对象类型如下 将存在length属性为number，并且拥有splice属性对应位函数时，此时对象会变成一个伪数组
+// 对象类型当存在length属性为number，并且拥有splice属性对应位函数时，此时对象会变成一个伪数组
+// length为1 无值 所以应该为数组[empty] push值的时候 往后添加值
+// eg.o.push(4)  => [empty, 4]  此时o的length为2
 const o = {
   length: 1,
-  splice: function() {
-    console.log(this)
-  },
+  splice: Array.prototype.splice,
   push: Array.prototype.push
 }
-// 会做一个key的赋值 push的位置indx就是此时的key值 此时调用了之后length会加1
-o.push(1)
-// 相当于 o[index] = 1
-console.log(o) // Object [empty, 1, splice: ƒ]
+console.log('o:', o) // [empty]
 
-// 当没有splice函数时对象处理 输出应该时Object {length:2, 1: 1, splice: f}
+// 没有splice函数时当对象处理
+const o2 = {
+  length: 1,
+  push: Array.prototype.push
+}
+console.log('o2:', o2) // {length: 1, push: ƒ}
 ```
 问题讨论：https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/76
 
@@ -163,14 +186,12 @@ console.log(o) // Object [empty, 1, splice: ƒ]
    a[c]='c';  
    console.log(a[b]);
    
-   ---------------------
    // example 2
    var a={}, b=Symbol('123'), c=Symbol('123');  
    a[b]='b';
    a[c]='c';  
    console.log(a[b]);
    
-   ---------------------
    // example 3
    var a={}, b={key:'123'}, c={key:'456'};  
    a[b]='b';
@@ -180,9 +201,10 @@ console.log(o) // Object [empty, 1, splice: ƒ]
 
 <details><summary><b>答案</b></summary>
 <p>
-  **答案：** c	b 	c
 
-**解析：**此题考察	对象的键名的转换
+#### 答案：c b c
+
+解析：此题考察对象的键名的转换
 
 - 对象的键名只能是字符串和 Symbol 类型
 
@@ -292,7 +314,7 @@ console.log(o) // Object [empty, 1, splice: ƒ]
 </details>
 
 ---
-###### 6. **输出以下结果**
+###### 6.输出以下得输出结果？
 
 ```javascript
   function Foo(){
@@ -324,7 +346,8 @@ console.log(o) // Object [empty, 1, splice: ƒ]
 ```
 <details><summary><b>答案</b></summary>
 <p>
-答案： 2 4 1 1 2 3 3
+
+#### 答案： 2 4 1 1 2 3 3
 
 分析：考查原型原型链、隐式定义、变量提升等知识点。
 `Foo.getName()` 代码中直接定义，输出2
@@ -397,8 +420,10 @@ getName = function(){
 ```
 <details><summary><b>答案</b></summary>
 <p>
-  **答案：**  0 0 2 3
-  **解析：**考察react中setState的原理
+
+#### 答案：  0 0 2 3
+
+解析：考察react中setState的原理。
 </p>
 </details>
 
