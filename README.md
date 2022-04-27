@@ -733,3 +733,152 @@ console.log(msg.name);
 </details>
 
 ---
+
+###### 22.以下输出是什么？
+```javascript
+let person = { name: 'Lydia' };
+const members = [person];
+person = null;
+
+console.log(members);
+```
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：[{ name: "Lydia" }]
+
+解析：变量person指向对象，对象在设置彼此相等时通过引用进行交互，当您将一个变量的引用分配给另一个变量时，您制作了该引用的副本。当person重新赋值为null，不会影响之前的数组的引用。
+   
+</p>
+</details>
+
+---
+
+###### 23.以下输出什么？
+```javascript
+function greeting() {
+  throw 'Hello world!';
+}
+
+function sayHi() {
+  try {
+    const data = greeting();
+    console.log('It worked!', data);
+  } catch (e) {
+    console.log('Oh no an error:', e);
+  }
+}
+
+sayHi();
+```
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：Oh no an error: Hello world!
+
+解析：异常可以是字符串、数字、布尔值或对象。
+   
+</p>
+</details>
+
+---
+
+###### 24.以下输出是什么？
+```javascript
+// counter.js
+let counter = 10;
+export default counter;
+```
+```javascript
+// index.js
+import myCounter from './counter';
+
+myCounter += 1;
+
+console.log(myCounter);
+```
+
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：Error
+
+解析：导入的模块是只读的：您不能修改导入的模块。当我们尝试增加 myCounter 的值时，它会抛出一个错误：myCounter 是只读的，无法修改。
+   
+</p>
+</details>
+
+---
+
+###### 25.以下输出的是什么？
+```javascript
+const name = 'Lydia';
+age = 21;
+
+console.log(delete name);
+console.log(delete age);
+```
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：false, true
+
+解析：删除操作符返回一个布尔值：成功删除时为 true，否则返回 false。但是，使用 var、const 或 let 关键字声明的变量不能使用 delete 运算符删除。
+name由const声明，返回false，但age则是添加到window对象上，作为window对象的一个属性，能删除成功。
+   
+</p>
+</details>
+
+---
+
+###### 26.以下的输出是什么？
+```javascript
+const settings = {
+  username: 'lydiahallie',
+  level: 19,
+  health: 90,
+};
+
+const data = JSON.stringify(settings, ['level', 'health']);
+console.log(data);
+
+```
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案："{"level":19, "health":90}"
+
+解析：
+- JSON.stringify 的第二个参数是替换器。替换器可以是一个函数或一个数组，并允许您控制应该对值进行字符串化的内容和方式。
+- 如果替换器是一个数组，那么只有包含在数组中的属性名称会被添加到 JSON 字符串中。
+- 如果替换器是一个函数，则在您要字符串化的对象中的每个属性上都会调用此函数。此函数返回的值将是属性添加到 JSON 字符串时的值。
+   
+</p>
+</details>
+
+---
+
+###### 27.以下输出是什么？
+```javascript
+// index.js
+console.log('running index.js');
+import { sum } from './sum.js';
+console.log(sum(1, 2));
+
+// sum.js
+console.log('running sum.js');
+export const sum = (a, b) => a + b;
+```
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：running sum.js, running index.js, 3
+
+解析：
+- 使用 import 关键字，所有导入的模块都被预先解析。
+- 这是 CommonJS 中的 require() 和 import 的区别！使用 require()，你可以在代码运行时按需加载依赖。
+- 使用require，你能得到你以为的答案。
+</p>
+</details>
+
+---
