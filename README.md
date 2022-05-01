@@ -54,7 +54,7 @@ const intValue = parseInt(string[, radix]);
 // 每次执行
 parseInt('1', 0) // 1 
 parseInt('2', 1) // NaN 
-parseInt('3', 2) // NaN 字符串第一个值大于等于基数的时候返回NaN
+parseInt('3', 2) // NaN 
 ```
 
 **如何达到预期效果**
@@ -65,9 +65,11 @@ OR
 ['1', '2', '3'].map(Number)
 ```
 
-**parseInt转换规则(伴随radix)总结**
-- 检查radix是否在区间[2,36]之间，除0外，不再此区间直接返回NaN
-- 检查转换参数是否大于等于radix，是的话直接返回NaN
+**parseInt(value,radix)转换规则(伴随radix)总结**
+- value若不是字符串，先转为字符串
+- 检查radix是否在区间[2,36]之间，0或不填默认为10，不再此区间直接返回NaN
+- 依顺序找到字符串value中满足小于radix的数，直到无效数值型
+- 按radix展开，转化为10进制数。例如radix为4展开为1*4(2)+2*4(1)+3*4(0) = 16 + 8 + 3 = 27
 
 
 </p>
@@ -274,41 +276,39 @@ console.log('o2:', o2) // {length: 1, push: ƒ}
   curry 的概念：只传递给函数一部分参数来调用它，让它返回一个函数去处理剩下的参数。
 
   ```javascript
-    // 参数固定的情况
-    const fn = (a, b, c) => a + b + c
-
-    const curry = (fn) => {
-      return function curried(...args) {
-        if (args.length < fn.length) {
-          return function () {
-            return curried(...args.concat(Array.from(arguments)))
-          }
-        }
-        return fn(...args)
+// 参数固定的情况
+const fn = (a, b, c) => a + b + c
+const curry = (fn) => {
+  return function curried(...args) {
+    if (args.length < fn.length) {
+      return function () {
+        return curried(...args.concat(Array.from(arguments)))
       }
     }
+    return fn(...args)
+  }
+}
+const add = curry(fn)
+console.log(add(1, 2)(4))
 
-    const add = curry(fn)
-
-    console.log(add(1, 2)(4))
-
-    // 参数不固定的情况
-    // 不限数量参数
-    function curry2() {
-      // 存储所有的参数
-      const args = [].slice.call(arguments)
-      // 在内部声明一个函数，利用闭包的特性保存_args并收集所有的参数值
-      const fn = function () {
-        args.concat(Array.from(arguments))
-        return fn
-      }
-      // 利用toString隐式转换的特性，当最后执行时隐式转换，并计算最终的值返回
-      fn.toString = () => args.reduce((a, b) => a + b)
-      return fn
-    }
-
-    console.log(curry2(1, 2, 3))
-    
+// 不确定参数的情况
+// add(1)(2)(3) => 6
+// add(1,2)(3)(4) => 10
+const curry2 = () => {
+  let params = []
+  const add = (...args) => {
+    params = params.concat(args)
+    return add
+  }
+  add[Symbol.toPrimitive] = function () {
+    return params.reduce((res, item) => res + item)
+  }
+  return add
+}
+let add = curry2()
+console.log(+add(1, 2)(3)(4)) // 10
+add = curry2()
+console.log(+add(1, 2)(3)(4)(5)) // 15
   ```
 </p>
 </details>
