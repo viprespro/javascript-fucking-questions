@@ -882,3 +882,250 @@ export const sum = (a, b) => a + b;
 </details>
 
 ---
+
+###### 28.以下输出是什么？
+```javascript
+function foo() {
+  return 'Here is pizza!';
+}
+
+const bar = () =>
+  "Here's chocolate... now go hit the gym already.";
+
+console.log(foo.prototype);
+console.log(bar.prototype);
+```
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：{ constructor: ...} undefined
+
+解析：
+- 普通函数如foo，都存在prototype属性，它是一个拥有constructor属性的一个对象
+- 箭头函数bar，不存在prototype属性的，访问将会得到undefined
+</p>
+</details>
+
+---
+
+###### 29.以下输出是什么？
+```javascript
+const info = {
+  [Symbol('a')]: 'b',
+};
+
+console.log(info);
+console.log(Object.keys(info));
+```
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：{ constructor: ...} undefined
+
+解析：考察symbol作为键值
+- symbol作为键值是不可枚举的，Object.keys将返回[]
+- 打印整个对象时，所有的属性都是可见的，即使是不可枚举的属性
+</p>
+</details>
+
+---
+
+###### 30.以下输出是什么？
+```javascript
+const getList = ([x, ...y]) => [x, y]
+const getUser = user => { name: user.name, age: user.age }
+
+const list = [1, 2, 3, 4]
+const user = { name: "Lydia", age: 21 }
+
+console.log(getList(list))
+console.log(getUser(user))
+```
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：{ constructor: ...} undefined
+
+解析：考察展开运算符与箭头函数中返回对象
+- 展开运算符中，对应x=1，y=[2,3,4],所有返回[1,[2,3,4]]
+- 而箭头函数中返回一个对象时，只有一条语句返回，则需要使用括号进行包裹。
+  即const getUser = user => ({ name: user.name, age: user.age })
+</p>
+</details>
+
+---
+
+###### 31.以下输出是什么？
+```javascript
+const name = 'Lydia';
+
+console.log(name());
+```
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：{ constructor: ...} undefined
+
+解析：TypeError
+- 变量名保存一个字符串的值，它不是一个函数，因此不能调用
+- 当值不是预期的类型时，会抛出 TypeErrors。 JavaScript 期望 name 是一个函数，因为我们试图调用它
+- 当你编写了无效的 JavaScrip 内容时，会抛出 SyntaxErrors
+- 当 JavaScript 无法找到对您尝试访问的值的引用时，会引发 ReferenceErrors
+</p>
+</details>
+
+---
+
+###### 31.以下输出是什么？
+```javascript
+const colorConfig = {
+  red: true,
+  blue: false,
+  green: true,
+  black: true,
+  yellow: false,
+};
+
+const colors = ['pink', 'red', 'blue'];
+
+console.log(colorConfig.colors[1]);
+```
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：TypeError
+</p>
+</details>
+
+---
+
+###### 32.这个方法是的作用是?
+```javascript
+JSON.parse();
+```
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：Parses JSON to a JavaScript value
+```txt
+JSON string to a JavaScript value:
+const jsonNumber = JSON.stringify(4); // '4'
+JSON.parse(jsonNumber); // 4
+
+const jsonArray = JSON.stringify([1, 2, 3]); // '[1, 2, 3]'
+JSON.parse(jsonArray); // [1, 2, 3]
+
+const jsonArray = JSON.stringify({ name: 'Lydia' }); // '{"name":"Lydia"}'
+JSON.parse(jsonArray); // { name: 'Lydia' }
+```
+</p>
+</details>
+
+---
+
+###### 33.这个方法是的作用是?
+```javascript
+let name = 'Lydia';
+
+function getName() {
+  console.log(name);
+  let name = 'Sarah';
+}
+
+getName();
+```
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：ReferenceError
+- 每个函数都有自己的执行上下文（或作用域），当访问name变量，由于自身存在name变量，但是用let声明，会形成暂时性死区，引发ReferenceError
+</p>
+</details>
+
+---
+
+###### 34.以下输出是什么？
+```javascript
+const name = 'Lydia Hallie';
+const age = 21;
+
+console.log(Number.isNaN(name));
+console.log(Number.isNaN(age));
+
+console.log(isNaN(name));
+console.log(isNaN(age));
+```
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：false false true false
+- 使用Number.isNaN方法，你可以检查你传递的值是否为数值并且等于NaN
+- 使用isNaN方法，你可以检查你传递的值是否不是数字
+</p>
+</details>
+
+---
+
+###### 35.以下输出是什么？
+```javascript
+const randomValue = 21;
+
+function getInfo() {
+  console.log(typeof randomValue);
+  const randomValue = 'Lydia Hallie';
+}
+
+getInfo();
+```
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：false false true false
+- 用 const 关键字声明的变量在初始化之前是不可引用的
+- 在未初始化之前引用会报引用错误
+</p>
+</details>
+
+---
+
+###### 36.以下输出是什么？
+```javascript
+const person = { name: 'Lydia Hallie' };
+
+Object.seal(person);
+
+person.name = "Evan Bacon"
+
+console.log(person)
+```
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：{ name: 'Evan Bacon' }
+- 使用 Object.seal，我们可以防止添加新属性或删除现有属性,但是，您仍然可以修改现有属性的值
+</p>
+</details>
+
+---
+
+###### 37.以下输出是什么？
+```javascript
+let randomValue = { name: "Lydia" }
+randomValue = 23
+
+if (!typeof randomValue === "string") {
+	console.log("It's not a string!")
+} else {
+	console.log("Yay it's a string!")
+}
+```
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：Yay it's a string!
+- !typeof randomValue === "string" 会先计算typeof randomValue 为'number' string，取非之后为false，与string比较总是返回false，所以走else语句
+</p>
+</details>
+
+---
+
