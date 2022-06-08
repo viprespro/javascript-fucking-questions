@@ -314,7 +314,7 @@ console.log(+add(1, 2)(3)(4)(5)) // 15
 </details>
 
 ---
-###### 6.输出以下得输出结果？
+###### 6.以下输出结果是什么？
 
 ```javascript
   function Foo(){
@@ -1023,7 +1023,7 @@ JSON.parse(jsonArray); // { name: 'Lydia' }
 
 ---
 
-###### 33.这个方法是的作用是?
+###### 33.以下的输出是什么?
 ```javascript
 let name = 'Lydia';
 
@@ -1124,6 +1124,59 @@ if (!typeof randomValue === "string") {
 
 #### 答案：Yay it's a string!
 - !typeof randomValue === "string" 会先计算typeof randomValue 为'number' string，取非之后为false，与string比较总是返回false，所以走else语句
+</p>
+</details>
+
+---
+
+###### 38. 当a为何值时，能打印出xxx?
+```js
+var a = ?
+if (a == 1 && a == 2 && a == 3) {
+  console.log('xxx')
+}
+```
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：见下
+解析：考察js中的隐式类型转换。
+
+引用类型转换原始值的步骤
+- 先调用对象的Symbol.toPrimitive方法，如果不存在这个
+- 再调用valueOf方法 如果该方法返回一个原始值那么就用此原始值
+- 否则，调用toString方法，返回字符串表示
+  
+**答案1**
+```js
+const a = {
+  value: 1,
+  valueOf() {
+    return this.value++
+  },
+ }
+```
+
+**答案2**
+```js
+const a = [1,2,3]
+a.toString = a.shift
+```
+
+</p>
+</details>
+
+---
+
+###### 39. 如何实现 x === x + 1？
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：Number.MAX_SAFE_INTEGER + 1
+```js
+const x = Number.MAX_SAFE_INTEGER + 1 
+console.log(x === x + 1) // true
+```
 </p>
 </details>
 
