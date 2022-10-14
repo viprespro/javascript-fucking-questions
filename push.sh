@@ -9,4 +9,4 @@ if [ -z $msg ]; then
 fi
 git commit -m"$msg"
 git pull -r
-git push origin master
+git push origin main
