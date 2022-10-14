@@ -976,7 +976,7 @@ console.log(name());
 
 ---
 
-###### 31.以下输出是什么？
+###### 32.以下输出是什么？
 ```javascript
 const colorConfig = {
   red: true,
@@ -999,7 +999,7 @@ console.log(colorConfig.colors[1]);
 
 ---
 
-###### 32.这个方法是的作用是?
+###### 33.这个方法是的作用是?
 ```javascript
 JSON.parse();
 ```
@@ -1023,7 +1023,7 @@ JSON.parse(jsonArray); // { name: 'Lydia' }
 
 ---
 
-###### 33.以下的输出是什么?
+###### 34.以下的输出是什么?
 ```javascript
 let name = 'Lydia';
 
@@ -1044,7 +1044,7 @@ getName();
 
 ---
 
-###### 34.以下输出是什么？
+###### 35.以下输出是什么？
 ```javascript
 const name = 'Lydia Hallie';
 const age = 21;
@@ -1066,7 +1066,7 @@ console.log(isNaN(age));
 
 ---
 
-###### 35.以下输出是什么？
+###### 36.以下输出是什么？
 ```javascript
 const randomValue = 21;
 
@@ -1088,7 +1088,7 @@ getInfo();
 
 ---
 
-###### 36.以下输出是什么？
+###### 37.以下输出是什么？
 ```javascript
 const person = { name: 'Lydia Hallie' };
 
@@ -1108,7 +1108,7 @@ console.log(person)
 
 ---
 
-###### 37.以下输出是什么？
+###### 38.以下输出是什么？
 ```javascript
 let randomValue = { name: "Lydia" }
 randomValue = 23
@@ -1129,7 +1129,7 @@ if (!typeof randomValue === "string") {
 
 ---
 
-###### 38. 当a为何值时，能打印出xxx?
+###### 39. 当a为何值时，能打印出xxx?
 ```js
 var a = ?
 if (a == 1 && a == 2 && a == 3) {
@@ -1168,7 +1168,7 @@ a.toString = a.shift
 
 ---
 
-###### 39. 如何实现 x === x + 1？
+###### 40. 如何实现 x === x + 1？
 <details><summary><b>答案</b></summary>
 <p>
 
@@ -1177,6 +1177,119 @@ a.toString = a.shift
 const x = Number.MAX_SAFE_INTEGER + 1 
 console.log(x === x + 1) // true
 ```
+</p>
+</details>
+
+---
+
+###### 41. 下面代码输出为？
+```js
+function foo(a, b = 1, c) {
+  console.log(foo.length)
+}
+
+foo(1,2,3)
+```
+
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：1
+解析：函数长度属性及存在默认参数
+- es6引入了默认参数。此前，函数length属性用于返回所有函数参数编号
+- 默认参数的引入，length属性发生了变化，带默认值的参数是可选的，所以这样的参数不计入length中
+- 默认参数后面的参数也是可选，后面的也不会计入长度属性计算中
+</p>
+</details>
+
+---
+
+###### 42. 以下代码输出？
+```js
+
+const obj = {};
+
+Object.defineProperty(obj, 'count', {
+ value: '100'
+});
+
+console.log(obj.count);
+delete obj.count;
+console.log(obj.count);
+```
+
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：100 100
+解析：Object.defineProperty 方法及其默认参数
+- 语法格式：Object.defineProperty(obj, prop, descriptors)
+- descriptors属性描述符
+  + 数据描述符 （值 可写 可枚举 可配置）默认情况，不可写 不可枚举 不可配置 可配置属性指定是否可以从对象中删除属性，以及将来是否可以更改属性描述符。题目中由于默认为false 将会别忽略，严格模式下 将会报错
+  + 访问描述符 （get set方法）
+</p>
+</details>
+
+---
+
+###### 43. 以下代码输出？
+```js
+
+function Foo() {
+ this.flag = true;
+}
+
+const foo = new Foo();
+const bar = Object.create(foo);
+
+const clone1 = { ...bar };
+const clone2 = Object.assign({}, bar);
+
+console.log(bar.flag, clone1.flag, clone2.flag);
+```
+
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：true undefined undefined
+解析：Object.create 和 Object.assign 克隆对象
+- 语法：Object.create(proto[,propertiesObject]) 创建一个新对象 并以proto作为原型 propertiesObject对新创建的对象进行初始化 
+- admin本身是没有flag属性 访问时找到其原型对象上的属性
+- 通过展开符与Object.assign()克隆会忽略其原型
+  
+**他们原型为**
+```js
+admin.__proto__ Foo { flag: true },
+clone1.__proto__ [Object: null prototype] {},
+clone2.__proto__ [Object: null prototype] {}
+```
+**克隆包含其原型**
+```js
+const clone1 = { __proto__: Object.getPrototypeOf(obj), ...obj };
+const clone2 = Object.assign(Object.create(Object.getPrototypeOf(obj)), obj);
+```
+</p>
+</details>
+
+---
+
+###### 44. 以下代码输出？
+```js
+const str = 'string';
+const str2 = String('string');
+
+console.log(str instanceof String);
+console.log(str2 instanceof String);
+```
+
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：false false
+解析：字符串函数和 instanceof 运算符
+- instanceof 运算符仅适用于对象
+- 字符串文字'string'是原始的
+- 非构造函数上下文中的字符串调用（不使用 new 关键字调用）返回一个原始字符串
 </p>
 </details>
 
