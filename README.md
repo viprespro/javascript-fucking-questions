@@ -67,10 +67,8 @@ OR
 
 **parseInt(value,radix)转换规则(伴随radix)总结**
 - value若不是字符串，先转为字符串
-- 检查radix是否在区间[2,36]之间，0或不填默认为10，不再此区间直接返回NaN
-- 依顺序找到字符串value中满足小于radix的数，直到无效数值型
-- 按radix展开，转化为10进制数。例如radix为4展开为1*4(2)+2*4(1)+3*4(0) = 16 + 8 + 3 = 27
-
+- 检查radix是否在区间[2,36]之间，0或不填默认为10，不再此区间直接返回NaN，parseInt('2', 1) 1不在有效值内，返回NaN
+- 依顺序找到字符串value中满足小于radix的数，直到无效数值型，parseInt('3', 2) 2表示为按照二进制解析，只有0 1属于有效数字，3不为有效数字，返回NaN
 
 </p>
 </details>
@@ -78,7 +76,7 @@ OR
 ###### 2. 以下输出结果是什么？
 ```javascript
  let i,j,k;
- for( i = 0 , j = 0; i < 10 , j < 6; i++ , j++ ) {
+ for( i = 0 , j = 0; i < 10 , j < 6; i++, j++ ) {
    k = i+j;
  }
  console.log('k:', k)
@@ -102,7 +100,7 @@ const a = {
   }
 };
 
-a.foo(); // 'false' in console
+a.foo(); // this此时指向a 显然this !== window
 
 // 使用逗号操作符
 (0, a.foo)(); // 'true' in console
@@ -145,6 +143,7 @@ const obj = {
 'splice': Array.prototype.splice,
 'push': Array.prototype.push
 }
+console.log(obj)
 obj.push(1)
 obj.push(2)
 console.log(obj)
@@ -155,21 +154,27 @@ console.log(obj)
 #### 答案：Object(4) [empty × 2, 1, 2, splice: ƒ, push: ƒ]
 
 ```javascript
-// 对象类型当存在length属性为number，并且拥有splice属性对应位函数时，此时对象会变成一个伪数组
-// length为1 无值 所以应该为数组[empty] push值的时候 往后添加值
-// eg.o.push(4)  => [empty, 4]  此时o的length为2
+// 考察点
+// 1. 当对象存在splice属性时 控制台输出会是数组的形式 但obj仍然是对象类型
+// 2. push的位置取决于此时length的长度 此时length为2 所以执行push会从小标2开始 2次push覆盖了3、4，length长度变为4
+
+// 存在splice函数
 const o = {
   length: 1,
   splice: Array.prototype.splice,
   push: Array.prototype.push
 }
-console.log('o:', o) // [empty]
+o.push(1)
+o.push(2)
+console.log('o:', o) // [empty, 1, 2, splice: f, push: f]
 
-// 没有splice函数时当对象处理
+// 不存在splice函数时当对象处理
 const o2 = {
   length: 1,
   push: Array.prototype.push
 }
+o.push(1)
+o.push(2)
 console.log('o2:', o2) // {length: 1, push: ƒ}
 ```
 问题讨论：https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/76
@@ -1295,3 +1300,25 @@ console.log(str2 instanceof String);
 
 ---
 
+###### 45. 以下代码输出？
+```js
+var a = {n:1};
+var b = a;
+a.x = a = {n:2};
+console.log(a.x);
+console.log(b.x);
+```
+<details><summary><b>答案</b></summary>
+<p>
+
+#### 答案：
+undefined
+{n:2}
+
+解析：
+- 连续=号赋值从右到左
+- .号优先级高于=号赋值
+</p>
+</details>
+
+---
