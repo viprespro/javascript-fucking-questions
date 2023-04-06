@@ -191,19 +191,19 @@ console.log('o2:', o2) // {length: 1, push: ƒ}
    var a={}, b='123', c=123;  
    a[b]='b';
    a[c]='c';  
-   console.log(a[b]);
+   console.log(a[b]); 
    
    // example 2
    var a={}, b=Symbol('123'), c=Symbol('123');  
    a[b]='b';
    a[c]='c';  
-   console.log(a[b]);
+   console.log(a[b]); 
    
    // example 3
    var a={}, b={key:'123'}, c={key:'456'};  
    a[b]='b';
    a[c]='c';  
-   console.log(a[b]);
+   console.log(a[b]); 
    ```
 
 <details><summary><b>答案</b></summary>
@@ -278,7 +278,7 @@ console.log('o2:', o2) // {length: 1, push: ƒ}
 <p>
   考察：函数柯里化
 
-  curry 的概念：只传递给函数一部分参数来调用它，让它返回一个函数去处理剩下的参数。
+  curry 的概念：只传递给函数一部分参数来调用它，让它返回一个函数去处理剩下的参数
 
   ```javascript
 // 参数固定的情况
@@ -296,24 +296,19 @@ const curry = (fn) => {
 const add = curry(fn)
 console.log(add(1, 2)(4))
 
-// 不确定参数的情况
-// add(1)(2)(3) => 6
-// add(1,2)(3)(4) => 10
-const curry2 = () => {
-  let params = []
-  const add = (...args) => {
-    params = params.concat(args)
-    return add
+// 2.确定参数的情况
+function add() {
+  const colls = [...arguments]
+  const fn = function () {
+    const fn_args = [...arguments]
+    colls.push(...fn_args)
+    return fn
   }
-  add[Symbol.toPrimitive] = function () {
-    return params.reduce((res, item) => res + item)
+  fn.toString = function () {
+    return colls.reduce((a, b) => a + b)
   }
-  return add
+  return fn
 }
-let add = curry2()
-console.log(+add(1, 2)(3)(4)) // 10
-add = curry2()
-console.log(+add(1, 2)(3)(4)(5)) // 15
   ```
 </p>
 </details>
@@ -322,32 +317,37 @@ console.log(+add(1, 2)(3)(4)(5)) // 15
 ###### 6.以下输出结果是什么？
 
 ```javascript
-  function Foo(){
-    getName = function(){
-        console.log(1);
-    };
-    return this;
-  } 
-  Foo.getName = function(){
-      console.log(2);
-  }
-  Foo.prototype.getName = function(){
-      console.log(3);
-  }
-  var getName = function(){
-      console.log(4);
-  }
-  function getName(){
-      console.log(5);
-  }
-  //输出以下的输出结果
-  Foo.getName();
-  getName();
-  Foo().getName();
-  getName();
-  new Foo.getName();
-  new Foo().getName();
-  new new Foo().getName();
+function Foo(){
+  getName = function(){
+      console.log(1);
+  };
+  return this;
+} 
+
+Foo.getName = function(){
+  console.log(2);
+}
+
+Foo.prototype.getName = function(){
+  console.log(3);
+}
+
+var getName = function(){
+  console.log(4);
+}
+
+function getName(){
+  console.log(5);
+}
+
+// Output?
+Foo.getName();
+getName();
+Foo().getName();
+getName();
+new Foo.getName();
+new Foo().getName();
+new new Foo().getName();
 ```
 <details><summary><b>答案</b></summary>
 <p>
@@ -394,7 +394,7 @@ getName = function(){
 ---
 ###### 7. 下面的输出是什么？
 ```javascript
-  class Example extends React.Component {
+class Example extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -404,17 +404,17 @@ getName = function(){
 
   componentDidMount() {
     this.setState({val: this.state.val + 1});
-    console.log(this.state.val);    // 第 1 次 log
+    console.log(this.state.val);    // ?
 
     this.setState({val: this.state.val + 1});
-    console.log(this.state.val);    // 第 2 次 log
+    console.log(this.state.val);    // ?
 
     setTimeout(() => {
       this.setState({val: this.state.val + 1});
-      console.log(this.state.val);  // 第 3 次 log
+      console.log(this.state.val);  // ?
 
       this.setState({val: this.state.val + 1});
-      console.log(this.state.val);  // 第 4 次 log
+      console.log(this.state.val);  // ?
     }, 0);
   }
 
@@ -426,9 +426,11 @@ getName = function(){
 <details><summary><b>答案</b></summary>
 <p>
 
-#### 答案：  0 0 2 3
+#### 答案： 0 0 2 3
 
 解析：考察react中setState的原理。
+- 合成事件及生命周期函数setState表现为异步行为，setState将会批处理
+- 原生事件或setTimeout等异步任务中表现为同步行为
 </p>
 </details>
 
