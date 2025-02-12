@@ -143,7 +143,6 @@ const obj = {
 'splice': Array.prototype.splice,
 'push': Array.prototype.push
 }
-console.log(obj)
 obj.push(1)
 obj.push(2)
 console.log(obj)
@@ -151,34 +150,11 @@ console.log(obj)
 <details><summary><b>答案</b></summary>
 <p>
 
-#### 答案：Object(4) [empty × 2, 1, 2, splice: ƒ, push: ƒ]
+#### 答案：{2: 1, 3: 2, length: 4, splice: ƒ, push: ƒ}
 
-```javascript
-// 考察点
-// 1. 当对象存在splice属性时 控制台输出会是数组的形式 但obj仍然是对象类型
-// 2. push的位置取决于此时length的长度 此时length为2 所以执行push会从小标2开始 2次push覆盖了3、4，length长度变为4
-
-// 存在splice函数
-const o = {
-  length: 1,
-  splice: Array.prototype.splice,
-  push: Array.prototype.push
-}
-o.push(1)
-o.push(2)
-console.log('o:', o) // [empty, 1, 2, splice: f, push: f]
-
-// 不存在splice函数时当对象处理
-const o2 = {
-  length: 1,
-  push: Array.prototype.push
-}
-o.push(1)
-o.push(2)
-console.log('o2:', o2) // {length: 1, push: ƒ}
-```
-问题讨论：https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/76
-
+参考问题讨论：
+  - https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/76
+  - https://github.com/CuriosityLxn/Fantastic-Blog/issues/1
 
 </p>
 </details>
